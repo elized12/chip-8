@@ -1,5 +1,5 @@
 Debug/
-Relaese/
+Release/
 x64/
 chip-8.vcxproj
 chip-8.vcxproj.filters
