@@ -13,7 +13,7 @@
 
 
 
-Chip8::Chip8() : _sound("sound.wav")
+Chip8::Chip8() : _sound("sound.wav"), _flagDraw(false)
 {
 	init();
 	loadFont();
@@ -475,6 +475,16 @@ uint16_t Chip8::getOpCode(uint8_t& firstBlockMemory, uint8_t& secondBlockMemory)
 {
 	uint16_t opCode = (firstBlockMemory << 8) | (secondBlockMemory);
 	return opCode;
+}
+
+bool Chip8::getDrawFlag() const noexcept
+{
+	return _flagDraw;
+}
+
+void Chip8::resetDrawFlag() noexcept
+{
+	_flagDraw = false;
 }
 
 parseOperation Chip8::parse(uint16_t& operation)

@@ -32,13 +32,17 @@ private:
 	uint16_t _programCounter; //программный счетчик
 	uint16_t _stack[16]; //стек
 	uint8_t _ptrStack; //указатель стека
+	/// <summary>
+	/// 1 - WHITE
+	/// 0 - BLACK
+	/// </summary>
 	std::array<std::array<uint8_t, 64>, 32> _displayBuffer; // графика width 64 height 32
 	uint8_t _delayTimer;
 	uint8_t _soundTimer;
 	uint16_t _operationCode; // код операции
 	bool _keys[16];
 	SoundChip8 _sound;
-	bool _flagDraw;
+	bool _flagDraw; //флаг что нужно перерисовать экран
 public:
 	Chip8();
 public:
@@ -49,10 +53,12 @@ public:
 	void clearDisplay() noexcept;
 	std::array<std::array<uint8_t, 64>, 32>& getDisplay() noexcept;
 	bool* getKeyArray(int& size);
+	bool getDrawFlag() const noexcept;
+	void resetDrawFlag() noexcept;
+	parseOperation parse(uint16_t& operation);
 private:
 	void init() noexcept;
 	void loadFont() noexcept;
 	uint16_t getOpCode(uint8_t& firstBlockMemory, uint8_t& secondBlockMemory);
-	parseOperation parse(uint16_t& operation);
 	uint16_t mergeBlock(int count, ...);
 };

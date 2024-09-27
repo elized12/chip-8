@@ -10,8 +10,6 @@
 #include "include/keyboardChip8.h"
 #include "nfd.h"
 
-const int FPS = 60;
-
 using namespace std::chrono_literals;
 
 #if defined(_WIN32) && defined(_RELEASE)
@@ -42,6 +40,10 @@ int main(int argc, char* argv[])
 
 	chip.loadProgram(readerGame.getGame());
 
+	auto endTime = std::chrono::steady_clock::now();
+	
+	double timeFrameMS = 5;
+
     while (window.isOpen()) 
     {
 		if (isStop == true)
@@ -65,7 +67,24 @@ int main(int argc, char* argv[])
 		{
 			eventSystem.proccessEvent();
 			chip.emulateCycle();
-			graphicsChip.drawForCycle(bufferDisplay);
+
+			if (chip.getDrawFlag())
+			{
+				auto startTime = std::chrono::steady_clock::now();
+				
+				std::chrono::duration<double, std::milli> duractionTime = startTime - endTime;
+
+				double milliseconds = duractionTime.count();
+				
+				if (timeFrameMS > milliseconds)
+					std::this_thread::sleep_for(std::chrono::milliseconds(int(timeFrameMS - milliseconds)));
+
+
+				endTime = startTime;
+
+				graphicsChip.drawForCycle(bufferDisplay);
+				chip.resetDrawFlag();
+			}
 		}
     }
 

@@ -10,7 +10,7 @@ private:
 	int _height, _width;
 	int _localHeight, _localWidth;
 	int _sizePixel;
-	std::vector<std::vector<sf::RectangleShape>> _bufferDisplay;
+	sf::VertexArray _bufferDisplay;
 public:
 	GraphicsChip8(sf::RenderWindow& window, int localHeight, int localWidth, int sizePixel);
 public:
@@ -23,6 +23,7 @@ public:
 	void drawForCycle(std::array<std::array<T, Colums>, Rows>& array);
 private:
 	void initBuffer() noexcept;
+	void fillQuad(sf::VertexArray& buffer, int posStart, const sf::Color& color);
 };
 
 template<class T, size_t Rows, size_t Colums>
@@ -32,12 +33,12 @@ inline void GraphicsChip8::fillBufferByArray(std::array<std::array<T, Colums>, R
 	{
 		for (int x = 0; x < _localWidth; x++)
 		{
-			sf::RectangleShape& shape = _bufferDisplay[y][x];
+			int offset = (y * _localWidth +x) * 4;
 
-			if (array[y][x] != 0)
-				shape.setFillColor(sf::Color::White);
+			if (array[y][x] == 1)
+				fillQuad(_bufferDisplay, offset, sf::Color::White);
 			else
-				shape.setFillColor(sf::Color::Black);
+				fillQuad(_bufferDisplay, offset, sf::Color::Black);
 		}
 	}
 }
